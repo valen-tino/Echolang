@@ -1,12 +1,5 @@
 import mongoose from "mongoose";
 
-/**
- * 
- * MongoDB setup in NextJS project
- * A function which is serves to connect with the MongoDB database
- * 
- */
-
 export default async function connectDB(){
     try {
         mongoose.connect(process.env.MONGODB_URI!);
