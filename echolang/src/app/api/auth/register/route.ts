@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import connectDB from 'paket/lib/db';
-import User from 'paket/app/models/User';
+import User from 'paket/models/User';
 import validator from "validator";
 import bcrypt from "bcryptjs";
 

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import JwtDecode from "jwt-decode";
-import User from "paket/app/models/User";
+import { jwtDecode } from "jwt-decode";
+import { User } from "paket/types/user";
 import { useRouter } from "next/navigation";
 
 export const useSession = () => {
@@ -11,11 +11,21 @@ export const useSession = () => {
     useEffect(() => {
         const token = localStorage.getItem("token");
         if(token){
-            const decoded: User = JwtDecode(token);
-            setUser(decoded);
+            try {
+                const decoded: User = jwtDecode<User>(token);
+                setUser(decoded);
+                if(decoded.isAdmin){
+                    router.push('/adminDashboard');
+                } else {
+                    router.push('/customerDashboard');
+                }
+            } catch(err){
+                console.log(err);
+                localStorage.removeItem("token");
+                router.push('/login');
+            }
         } else {
             router.push('/login');
-            setUser(null);
         }
         setLoading(false);
     }, [router]);
@@ -25,13 +35,23 @@ export const useSession = () => {
         await fetch("api/auth/logout", {
             method: "POST"
         });
+        router.push('/login');
         setUser(null);
     }
 
-    const handleSignIn = async () => {
-        localStorage.setItem("token", token);
-        const decoded: User = JwtDecode(token);
-        setUser(decoded);
+    const handleSignIn = async (token: string) => {
+        if(typeof token === "string" && token.trim() !== ""){
+            localStorage.setItem("token", token);
+            const decoded: User = jwtDecode<User>(token);
+            setUser(decoded);
+            if(decoded.isAdmin){
+                router.push('/AdminDashboard');
+            } else {
+                router.push('/CustomerDashboard');
+            }
+        } else {
+            console.log("Invalid token specified.");
+        }
     }
 
     return { user, loading, handleSignIn, handleSignOut }
