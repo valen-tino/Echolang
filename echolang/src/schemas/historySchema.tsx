@@ -1,3 +1,6 @@
+const mongoose = require('mongoose');
+const { Schema } = mongoose;
+
 const historySchema = new Schema({
     user_id: {
       type: Schema.Types.ObjectId,

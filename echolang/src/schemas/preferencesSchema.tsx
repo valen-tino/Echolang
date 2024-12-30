@@ -1,3 +1,6 @@
+const mongoose = require('mongoose');
+const { Schema } = mongoose;
+
 const preferencesSchema = new Schema({
     user_id: {
       type: Schema.Types.ObjectId,
