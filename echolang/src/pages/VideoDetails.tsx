@@ -22,9 +22,9 @@ export default function VideoDetails() {
     status: 'completed',
     sourceLanguage: 'English',
     translations: [
-      { language: 'Spanish', progress: 100, status: 'completed' },
-      { language: 'French', progress: 65, status: 'processing' },
-      { language: 'German', progress: 30, status: 'processing' },
+      // { language: 'Spanish', progress: 100, status: 'completed' },
+      { language: 'French', progress: 100, status: 'completed' },
+      // { language: 'German', progress: 30, status: 'processing' },
     ],
   };
 
@@ -37,9 +37,9 @@ export default function VideoDetails() {
   return (
     <div className="container py-8">
       <div className="max-w-6xl mx-auto">
-        <div className="grid gap-8 grid-cols-1 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
           <div className="lg:col-span-2">
-            <div className="relative aspect-video rounded-lg overflow-hidden bg-black">
+            <div className="relative overflow-hidden bg-black rounded-lg aspect-video">
               <img
                 src={video.thumbnail}
                 alt={video.title}
@@ -47,9 +47,9 @@ export default function VideoDetails() {
               />
               <Button
                 size="icon"
-                className="absolute inset-0 m-auto h-16 w-16 rounded-full"
+                className="absolute inset-0 w-16 h-16 m-auto rounded-full"
               >
-                <Play className="h-8 w-8" />
+                <Play className="w-8 h-8" />
               </Button>
             </div>
 
@@ -107,6 +107,12 @@ export default function VideoDetails() {
                 <Card>
                   <CardContent className="py-4 space-y-4">
                     <Textarea
+                      placeholder="Give Rating from 1 to 5..."
+                      value={feedback}
+                      onChange={(e) => setFeedback(e.target.value)}
+                      rows={1}
+                    />
+                    <Textarea
                       placeholder="Provide feedback about the translations..."
                       value={feedback}
                       onChange={(e) => setFeedback(e.target.value)}
@@ -134,7 +140,7 @@ export default function VideoDetails() {
           <div className="space-y-6">
             <Card>
               <CardContent className="py-4">
-                <h3 className="font-medium mb-2">Video Information</h3>
+                <h3 className="mb-2 font-medium">Video Information</h3>
                 <dl className="space-y-2 text-sm">
                   <div className="flex justify-between">
                     <dt className="text-muted-foreground">Duration</dt>
@@ -154,7 +160,7 @@ export default function VideoDetails() {
 
             <Card>
               <CardContent className="py-4">
-                <h3 className="font-medium mb-2">Processing Status</h3>
+                <h3 className="mb-2 font-medium">Processing Status</h3>
                 <div className="space-y-2">
                   {video.translations.map((translation) => (
                     <div
