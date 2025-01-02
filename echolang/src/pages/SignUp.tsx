@@ -5,7 +5,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from 'sonner';
-import { useAuth } from '@/lib/auth'; // Import the useAuth hook
 
 export default function SignUp() {
   const [isLoading, setIsLoading] = useState(false);
@@ -13,32 +12,47 @@ export default function SignUp() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const { login } = useAuth(); // Use the login function from useAuth
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
 
+    // Form validation
     if (password !== confirmPassword) {
       toast.error('Passwords do not match.');
-      setIsLoading(false);
       return;
     }
 
-    // Simulate signup API call
-    setTimeout(async () => {
-      try {
-        // After successful signup, log the user in
-        await login(email, password); // Call the login function
-        toast.success('Account created successfully!');
-        navigate('/dashboard'); // Redirect to the dashboard after successful signup
-      } catch (error) {
-        toast.error('Failed to create account. Please try again.');
-      } finally {
-        setIsLoading(false);
+    if (!/\S+@\S+\.\S+/.test(email)) {
+      toast.error('Invalid email address.');
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const response = await fetch('/api/register', {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password, name })
+      });
+
+      const data = await response.json().catch(() => {
+        throw new Error('Invalid JSON response from the server.');
+      });
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to register.');
       }
-    }, 2000);
+
+      toast.success('Successfully registered the account.');
+      navigate('/login');
+    } catch (error) {
+      console.error('Error during registration:', error);
+      toast.error(error instanceof Error ? error.message : 'An unexpected error occurred.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
