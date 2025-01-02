@@ -1,29 +1,28 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from 'sonner';
-import { useAuth } from '@/lib/auth'; // Import the useAuth hook
+import { useAuth } from '@/features/auth';
 
 export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { login } = useAuth(); // Use the login function from useAuth
-  const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
     try {
-      await login(email, password); // Call the login function
+      await login(email, password);
       toast.success('Successfully logged in!');
-      navigate('/dashboard'); // Redirect to the dashboard after successful login
     } catch (error) {
       toast.error('Invalid credentials. Please try again.');
+      console.error('Login error:', error);
     } finally {
       setIsLoading(false);
     }

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -7,39 +7,79 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Textarea } from '@/components/ui/textarea';
 import { Globe, MessageSquare, Play, Settings } from 'lucide-react';
+import { FeedbackForm } from '@/features/feedback/components/FeedbackForm';
+import { submitProductFeedback } from '@/features/feedback/api/feedback';
+import { useFeedbackStore } from '@/features/feedback/hooks/useFeedbackStore';
+import { getVideoById } from '@/features/videos/api/videos';
+import type { Video } from '@/features/videos/types';
+import type { FeedbackFormData } from '@/features/feedback/types';
 
 export default function VideoDetails() {
-  const { id } = useParams();
-  const [feedback, setFeedback] = useState('');
+  const { id } = useParams<{ id: string }>();
+  const [video, setVideo] = useState<Video | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState('translations');
+  const addFeedback = useFeedbackStore((state) => state.addFeedback);
 
-  // Mock video data
-  const video = {
-    id,
-    title: 'Product Demo',
-    description: 'A comprehensive overview of our latest product features.',
-    thumbnail: 'https://images.unsplash.com/photo-1611162617474-5b21e879e113',
-    duration: '2:30',
-    status: 'completed',
-    sourceLanguage: 'English',
-    translations: [
-      // { language: 'Spanish', progress: 100, status: 'completed' },
-      { language: 'French', progress: 100, status: 'completed' },
-      // { language: 'German', progress: 30, status: 'processing' },
-    ],
+  useEffect(() => {
+    async function loadVideo() {
+      if (!id) return;
+      
+      try {
+        const data = await getVideoById(id);
+        setVideo(data);
+      } catch (error) {
+        console.error('Failed to load video:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    loadVideo();
+  }, [id]);
+
+  const handleFeedbackSubmit = async (data: FeedbackFormData) => {
+    if (!video) return;
+
+    const feedback = await submitProductFeedback(
+      video.id,
+      video.title,
+      data
+    );
+    addFeedback(feedback);
   };
 
-  const handleFeedbackSubmit = () => {
-    if (!feedback.trim()) return;
-    // Handle feedback submission
-    setFeedback('');
-  };
+  if (isLoading) {
+    return (
+      <div className="container py-8">
+        <div className="max-w-6xl mx-auto">
+          <div className="animate-pulse space-y-4">
+            <div className="aspect-video bg-gray-200 rounded-lg" />
+            <div className="h-8 bg-gray-200 rounded w-1/3" />
+            <div className="h-4 bg-gray-200 rounded w-2/3" />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!video) {
+    return (
+      <div className="container py-8">
+        <div className="max-w-6xl mx-auto text-center">
+          <h1 className="text-2xl font-bold">Video not found</h1>
+          <p className="text-muted-foreground">The requested video could not be found.</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="container py-8">
       <div className="max-w-6xl mx-auto">
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+        <div className="grid gap-8 grid-cols-1 lg:grid-cols-3">
           <div className="lg:col-span-2">
-            <div className="relative overflow-hidden bg-black rounded-lg aspect-video">
+            <div className="relative aspect-video rounded-lg overflow-hidden bg-black">
               <img
                 src={video.thumbnail}
                 alt={video.title}
@@ -47,9 +87,9 @@ export default function VideoDetails() {
               />
               <Button
                 size="icon"
-                className="absolute inset-0 w-16 h-16 m-auto rounded-full"
+                className="absolute inset-0 m-auto h-16 w-16 rounded-full"
               >
-                <Play className="w-8 h-8" />
+                <Play className="h-8 w-8" />
               </Button>
             </div>
 
@@ -61,7 +101,7 @@ export default function VideoDetails() {
               <p className="text-muted-foreground">{video.description}</p>
             </div>
 
-            <Tabs defaultValue="translations" className="mt-8">
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-8">
               <TabsList>
                 <TabsTrigger value="translations">
                   <Globe className="w-4 h-4 mr-2" />
@@ -104,25 +144,10 @@ export default function VideoDetails() {
               </TabsContent>
 
               <TabsContent value="feedback" className="mt-4">
-                <Card>
-                  <CardContent className="py-4 space-y-4">
-                    <Textarea
-                      placeholder="Give Rating from 1 to 5..."
-                      value={feedback}
-                      onChange={(e) => setFeedback(e.target.value)}
-                      rows={1}
-                    />
-                    <Textarea
-                      placeholder="Provide feedback about the translations..."
-                      value={feedback}
-                      onChange={(e) => setFeedback(e.target.value)}
-                      rows={4}
-                    />
-                    <Button onClick={handleFeedbackSubmit}>
-                      Submit Feedback
-                    </Button>
-                  </CardContent>
-                </Card>
+                <FeedbackForm
+                  productName={video.title}
+                  onSubmit={handleFeedbackSubmit}
+                />
               </TabsContent>
 
               <TabsContent value="settings" className="mt-4">
@@ -140,7 +165,7 @@ export default function VideoDetails() {
           <div className="space-y-6">
             <Card>
               <CardContent className="py-4">
-                <h3 className="mb-2 font-medium">Video Information</h3>
+                <h3 className="font-medium mb-2">Video Information</h3>
                 <dl className="space-y-2 text-sm">
                   <div className="flex justify-between">
                     <dt className="text-muted-foreground">Duration</dt>
@@ -160,7 +185,7 @@ export default function VideoDetails() {
 
             <Card>
               <CardContent className="py-4">
-                <h3 className="mb-2 font-medium">Processing Status</h3>
+                <h3 className="font-medium mb-2">Processing Status</h3>
                 <div className="space-y-2">
                   {video.translations.map((translation) => (
                     <div
