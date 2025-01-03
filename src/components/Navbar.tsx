@@ -3,19 +3,20 @@ import { Button } from '@/components/ui/button';
 import { ModeToggle } from '@/components/mode-toggle';
 import { Globe, Upload, User } from 'lucide-react';
 import { useAuth } from '@/features/auth';
+import small_logo from '../../public/echolang-logo.png';
 
 export default function Navbar() {
   const { isAuthenticated, user, logout } = useAuth();
 
   return (
     <nav className="border-b">
-      <div className="container flex h-16 items-center px-4 max-w-7xl mx-auto">
+      <div className="container flex items-center h-16 px-4 mx-auto max-w-7xl">
         <Link to="/" className="flex items-center space-x-2">
-          <Globe className="h-6 w-6" />
+          <img src={small_logo} alt="EchoLang" className="w-10 h-10" />
           <span className="text-xl font-bold">EchoLang</span>
         </Link>
 
-        <div className="ml-auto flex items-center space-x-4">
+        <div className="flex items-center ml-auto space-x-4">
           <ModeToggle />
           {isAuthenticated ? (
             <>
@@ -23,13 +24,13 @@ export default function Navbar() {
                 <>
                   <Button variant="ghost" size="sm" asChild>
                     <Link to="/upload">
-                      <Upload className="mr-2 h-4 w-4" />
+                      <Upload className="w-4 h-4 mr-2" />
                       Upload
                     </Link>
                   </Button>
                   <Button variant="ghost" size="sm" asChild>
                     <Link to="/dashboard">
-                      <User className="mr-2 h-4 w-4" />
+                      <User className="w-4 h-4 mr-2" />
                       Dashboard
                     </Link>
                   </Button>
@@ -38,7 +39,7 @@ export default function Navbar() {
               {user?.role === 'admin' && (
                 <Button variant="ghost" size="sm" asChild>
                   <Link to="/admin/dashboard">
-                    <User className="mr-2 h-4 w-4" />
+                    <User className="w-4 h-4 mr-2" />
                     Admin Dashboard
                   </Link>
                 </Button>
