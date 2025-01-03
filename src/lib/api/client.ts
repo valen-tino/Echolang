@@ -1,15 +1,15 @@
-import type { Video } from '@/features/videos/types';
+import { Video } from '@/features/videos/types';
 
-const API_BASE = '/api';
+const API_BASE_URL = '/api';
 
 export async function fetchVideos(userId?: string, page = 1, limit = 12) {
   const params = new URLSearchParams({
     ...(userId && { userId }),
-    page: String(page),
-    limit: String(limit)
+    page: page.toString(),
+    limit: limit.toString()
   });
 
-  const response = await fetch(`${API_BASE}/videos?${params}`);
+  const response = await fetch(`${API_BASE_URL}/videos?${params}`);
   if (!response.ok) {
     throw new Error('Failed to fetch videos');
   }
@@ -18,7 +18,7 @@ export async function fetchVideos(userId?: string, page = 1, limit = 12) {
 }
 
 export async function fetchVideoById(id: string) {
-  const response = await fetch(`${API_BASE}/videos/${id}`);
+  const response = await fetch(`${API_BASE_URL}/videos/${id}`);
   if (!response.ok) {
     throw new Error('Failed to fetch video');
   }
@@ -27,9 +27,11 @@ export async function fetchVideoById(id: string) {
 }
 
 export async function createVideo(video: Omit<Video, '_id'>) {
-  const response = await fetch(`${API_BASE}/videos`, {
+  const response = await fetch(`${API_BASE_URL}/videos`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json'
+    },
     body: JSON.stringify(video)
   });
 
@@ -41,9 +43,11 @@ export async function createVideo(video: Omit<Video, '_id'>) {
 }
 
 export async function updateVideo(id: string, updates: Partial<Video>) {
-  const response = await fetch(`${API_BASE}/videos/${id}`, {
+  const response = await fetch(`${API_BASE_URL}/videos/${id}`, {
     method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json'
+    },
     body: JSON.stringify(updates)
   });
 
@@ -55,7 +59,7 @@ export async function updateVideo(id: string, updates: Partial<Video>) {
 }
 
 export async function deleteVideo(id: string) {
-  const response = await fetch(`${API_BASE}/videos/${id}`, {
+  const response = await fetch(`${API_BASE_URL}/videos/${id}`, {
     method: 'DELETE'
   });
 

@@ -1,9 +1,16 @@
-// Authentication types
-export interface User {
-  id: string;
-  email: string;
-  name: string;
-  role: 'customer' | 'admin';
+import { DefaultSession } from 'next-auth';
+
+declare module 'next-auth' {
+  interface Session {
+    user: {
+      id: string;
+      role: 'customer' | 'admin';
+    } & DefaultSession['user']
+  }
+
+  interface User {
+    role: 'customer' | 'admin';
+  }
 }
 
 export interface AuthState {
