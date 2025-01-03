@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { ModeToggle } from '@/components/mode-toggle';
 import { Globe, Upload, User } from 'lucide-react';
 import { useAuth } from '@/features/auth';
-import small_logo from '../../public/echolang-logo.png';
+import small_logo from '../../public/echolang-final.png';
 
 export default function Navbar() {
   const { isAuthenticated, user, logout } = useAuth();
@@ -12,8 +12,7 @@ export default function Navbar() {
     <nav className="border-b">
       <div className="container flex items-center h-16 px-4 mx-auto max-w-7xl">
         <Link to="/" className="flex items-center space-x-2">
-          <img src={small_logo} alt="EchoLang" className="w-10 h-10" />
-          <span className="text-xl font-bold">EchoLang</span>
+          <img src={small_logo} alt="EchoLang" className="h-10 w-22" />
         </Link>
 
         <div className="flex items-center ml-auto space-x-4">
