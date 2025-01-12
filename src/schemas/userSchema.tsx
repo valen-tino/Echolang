@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
+import mongoose from 'mongoose';
+import { Schema } from 'mongoose';
 
+import mongoose from 'mongoose';
+import { Schema } from 'mongoose';
 const userSchema = new Schema(
   {
     email: {
@@ -16,7 +20,8 @@ const userSchema = new Schema(
     },
     role: {
       type: String,
-      enum: ['admin', 'user', 'manager'], // Example roles
+      enum: ['admin', 'user'], // Example roles
+      enum: ['admin', 'user'],
       default: 'user',
     },
     preferences: {
@@ -36,3 +41,6 @@ const userSchema = new Schema(
 );
 
 module.exports = mongoose.model('Users', userSchema);
+const User = mongoose.model('Users', userSchema);
+
+export { User };

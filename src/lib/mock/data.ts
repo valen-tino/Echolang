@@ -31,7 +31,7 @@ export const videos: VideoDocument[] = [
     format: 'mp4',
     status: 'completed',
     sourceLanguage: 'English',
-    targetLanguages: ['Spanish', 'French'],
+    targetLanguages: ['Spanish'],
     uploadDate: '2024-01-01T00:00:00Z',
     metadata: {
       width: 1920,

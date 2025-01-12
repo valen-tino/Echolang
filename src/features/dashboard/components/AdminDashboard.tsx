@@ -12,7 +12,7 @@ export function AdminDashboard() {
     totalUsers: 245,
     activeTranslations: 14,
     storageUsed: '45.8GB',
-    totalFeedback: 23
+    totalFeedback: 2
   });
 
   const [feedbacks] = useState<FeedbackEntry[]>([
@@ -41,16 +41,16 @@ export function AdminDashboard() {
 
   return (
     <div className="container py-8">
-      <div className="flex justify-between items-center mb-8">
+      <div className="flex items-center justify-between mb-8">
         <h1 className="text-3xl font-bold">Admin Dashboard</h1>
       </div>
 
       {/* Stats Cards */}
-      <div className="grid gap-8 grid-cols-1 md:grid-cols-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+      <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
+        {/* <Card>
+          <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
             <CardTitle className="text-sm font-medium">Total Users</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
+            <Users className="w-4 h-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{stats.totalUsers}</div>
@@ -58,9 +58,9 @@ export function AdminDashboard() {
         </Card>
 
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
             <CardTitle className="text-sm font-medium">Active Translations</CardTitle>
-            <Video className="h-4 w-4 text-muted-foreground" />
+            <Video className="w-4 h-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{stats.activeTranslations}</div>
@@ -68,18 +68,18 @@ export function AdminDashboard() {
         </Card>
 
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
             <CardTitle className="text-sm font-medium">Storage Used</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{stats.storageUsed}</div>
           </CardContent>
-        </Card>
+        </Card> */}
 
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
             <CardTitle className="text-sm font-medium">Total Feedback</CardTitle>
-            <MessageSquare className="h-4 w-4 text-muted-foreground" />
+            <MessageSquare className="w-4 h-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{stats.totalFeedback}</div>
@@ -91,8 +91,8 @@ export function AdminDashboard() {
       <Tabs value={activeTab} onValueChange={handleTabChange} className="mt-8">
         <TabsList>
           <TabsTrigger value="feedback">Feedback</TabsTrigger>
-          <TabsTrigger value="users">Users</TabsTrigger>
-          <TabsTrigger value="translations">Translations</TabsTrigger>
+          {/* <TabsTrigger value="users">Users</TabsTrigger>
+          <TabsTrigger value="translations">Translations</TabsTrigger> */}
         </TabsList>
 
         <TabsContent value="feedback">
@@ -105,16 +105,16 @@ export function AdminDashboard() {
         </TabsContent>
 
         <TabsContent value="users">
-          <div className="text-center text-muted-foreground py-8">
-            <Users className="mx-auto h-12 w-12 mb-4" />
+          <div className="py-8 text-center text-muted-foreground">
+            <Users className="w-12 h-12 mx-auto mb-4" />
             <h3 className="text-lg font-medium">User Management</h3>
             <p>User management interface will appear here</p>
           </div>
         </TabsContent>
 
         <TabsContent value="translations">
-          <div className="text-center text-muted-foreground py-8">
-            <Video className="mx-auto h-12 w-12 mb-4" />
+          <div className="py-8 text-center text-muted-foreground">
+            <Video className="w-12 h-12 mx-auto mb-4" />
             <h3 className="text-lg font-medium">Translation Management</h3>
             <p>Translation management interface will appear here</p>
           </div>
